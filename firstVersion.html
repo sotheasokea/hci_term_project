@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sanam Chandra Campus Tram</title>
+<style>
+:root{--bg:#f4f6f3;--card:#fff;--tx:#1b2b22;--mut:#66756c;--br:#dce3dd;--pri:#e2552b;--ok:#2e9d5b;--warn:#e0a21a;--bad:#d03c3c;--route:#b9c7bd;--land:#e9eee7;--wat:#bcd6e6;--grn:#cfe3cc;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121815;--card:#1c2520;--tx:#e8efe9;--mut:#93a499;--br:#2e3a33;--route:#3d4d44;--land:#1a231e;--wat:#1d3a52;--grn:#1f3a27}}
+:root[data-theme="dark"]{--bg:#121815;--card:#1c2520;--tx:#e8efe9;--mut:#93a499;--br:#2e3a33;--route:#3d4d44;--land:#1a231e;--wat:#1d3a52;--grn:#1f3a27}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+.w{max-width:960px;margin:auto;padding:14px}
+h1{font-size:20px;margin:0}h2{font-size:15px;margin:0 0 8px}.sub{color:var(--mut);font-size:13px}
+.g{display:grid;gap:12px;grid-template-columns:1fr}@media(min-width:800px){.g{grid-template-columns:1.3fr 1fr}}
+.c{background:var(--card);border:1px solid var(--br);border-radius:14px;padding:14px}
+svg{width:100%;height:auto;display:block;cursor:crosshair}
+.big{font-size:40px;font-weight:700;line-height:1}
+.chip{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;color:#fff}
+button{font:inherit;cursor:pointer;border:1px solid var(--br);background:var(--card);color:var(--tx);border-radius:10px;padding:6px 12px}
+button.on{background:var(--tx);color:var(--bg)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.spam{width:100%;background:var(--pri);color:#fff;border:0;font-size:18px;padding:14px;border-radius:14px;position:relative;overflow:visible}
+.spam:active{transform:scale(.97)}
+.fl{position:absolute;pointer-events:none;animation:up 1s forwards;font-size:20px}
+@keyframes up{to{transform:translateY(-70px);opacity:0}}
+.al{border-left:4px solid var(--warn);background:var(--bg);padding:8px 10px;border-radius:8px;margin-bottom:8px;font-size:14px}
+.al.bad{border-color:var(--bad)}.al b{display:block}.al i{color:var(--mut);font-style:normal;font-size:13px}
+.st{display:grid;grid-template-columns:1.2fr 2fr auto;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--br);font-size:14px;cursor:pointer}
+.st.sel{font-weight:700}.bar{height:8px;border-radius:5px;background:var(--br);overflow:hidden}.bar span{display:block;height:100%;transition:width .6s}
+.st.near{color:var(--ok);font-size:17px;font-weight:700}
+.fc{display:flex;gap:3px;margin-top:6px}.fc span{flex:1;height:8px;border-radius:3px}
+</style></head><body><div class="w">
+<div class="row" style="justify-content:space-between;margin-bottom:10px">
+<div><h1>🚋 Sanam Chandra Campus Tram</h1><div class="sub">Campus route with 2 loops, 10 stops · Dummy data</div></div>
+<span class="chip" id="clock" style="background:var(--tx);color:var(--bg)"></span></div>
+
+<div class="g"><div>
+<div class="c"><h2>🗺️ Tram Line Map</h2>
+<svg id="map" viewBox="0 0 460 612">
+<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0L8,4L0,8z" fill="var(--mut)"/></marker></defs><rect width="460" height="612" fill="var(--land)"/><rect x="34" y="22" width="128" height="146" rx="6" fill="var(--grn)"/><rect x="48" y="40" width="100" height="110" rx="46" fill="none" stroke="var(--route)" stroke-width="3"/><path d="M200 80Q250 60 275 120Q300 220 270 330Q230 350 215 280Q205 180 200 80Z" fill="var(--wat)"/><rect x="300" y="60" width="150" height="260" rx="12" fill="var(--grn)"/><rect x="333" y="450" width="48" height="36" rx="8" fill="var(--wat)"/><path d="M0 598H460" stroke="var(--route)" stroke-width="10"/><text x="238" y="215" transform="rotate(-90 238 215)" text-anchor="middle" fill="var(--mut)" font-size="10">Phetcharattana Rd</text><text x="330" y="602" text-anchor="middle" fill="var(--mut)" font-size="10">Song Phon Road</text>
+<path id="route" d="M170,572 V510 H362 C385,515 408,500 410,465 V418 C410,408 400,405 385,402 H345 C335,400 330,405 322,413 L236,498 Q230,502 222,502 H178 Q170,500 170,490 V30 Q170,12 150,12 H60 Q30,12 22,40 V165 Q22,176 34,176 H80 Q88,176 96,163 Q104,155 120,155 H178 V572 H170Z" fill="none" stroke="var(--route)" stroke-width="12" stroke-linejoin="round"/>
+<g id="arrows"></g><g id="stops"></g><g id="trams"></g><g id="me"></g>
+<text x="310" y="250" text-anchor="middle" fill="var(--mut)" font-size="12">Direction: counterclockwise ↺</text>
+<text x="310" y="268" text-anchor="middle" fill="var(--mut)" font-size="11">Tap the map to move your location</text>
+</svg>
+<div class="row sub"><span>🔴 Tram</span><span>🔵 You are here</span><span>⚪ Stop</span><span>✖ Stop closed</span></div></div>
+
+<div class="c" style="margin-top:12px"><h2>💺 Live Seat Availability (All Stops)</h2><div id="seats"></div>
+<div class="sub" style="margin-top:6px">Shows free seats on the next tram arriving at each stop</div></div>
+</div>
+
+<div>
+<div class="c"><h2>⏱️ Estimated Arrival — <span id="sn"></span></h2>
+<div class="row" style="align-items:flex-end"><div class="big" id="eta">–</div><div>min<div class="sub" id="etaN"></div></div></div>
+<div class="sub" style="margin-top:8px">Traffic conditions:</div>
+<div class="row" id="tf" style="margin-top:4px"></div>
+<div class="sub" style="margin-top:8px">Traffic forecast, next 30 min (every 5 min)</div><div class="fc" id="fc"></div>
+<div class="sub" id="fcT" style="margin-top:4px"></div><div id="live" style="margin-top:10px;font-size:13px"></div></div>
+
+<div class="c" style="margin-top:12px"><h2>⚠️ Delay & Service Alerts</h2><div id="alerts"></div>
+<div class="sub" style="margin:6px 0">Simulate an event:</div>
+<div class="row"><button data-s="break">🔧 Breakdown</button><button data-s="delay">🐢 Delay</button><button data-s="close">⛔ Close stop</button></div></div>
+
+<div class="c" style="margin-top:12px"><h2>📣 Hurry Up, Tram!</h2>
+<button class="spam" id="spam">🚋 Come faster, tram! <span id="cnt">0</span></button>
+<div class="sub" style="margin-top:6px">* Just for fun only — this has no effect on the real tram's arrival.</div>
+<div class="sub" id="msg" style="margin-top:4px"></div></div>
+</div></div></div>
+
+<script>
+const $=id=>document.getElementById(id),NS="http://www.w3.org/2000/svg";
+const route=$("route"),L=route.getTotalLength();
+const names=[["South Gate",170,568,"r"],["Satid",394,480,"l"],["Education B1",397,417,"t"],["Administrator",325,411,"t"],["Art Faculty",170,470,"l"],["Union Canteen",170,367,"r"],["Faculty of Science",170,296,"r"],["Petcharat Canteen",170,183,"r"],["Indee",180,153,"r"],["Painting Faculty",22,102,"r"]];
+const stops=names.map(([n,x,y,side])=>{let b=0,d=1e9;for(let l=0;l<L;l+=2){const p=route.getPointAtLength(l),k=(p.x-x)**2+(p.y-y)**2;if(k<d){d=k;b=l}}const p=route.getPointAtLength(b);return{n,f:b/L,x:p.x,y:p.y,side,closed:false}});
+const COL=["var(--ok)","var(--warn)","var(--bad)"],TN=["Light","Moderate","Heavy"],SPD=[1,.72,.45],LOOP=24;
+const N=5;
+const trams=Array.from({length:N},(_,i)=>({f:i/N,seats:[14,6,10,12,8][i%5],broken:false,id:i+1,dwell:0,at:-1}));
+let traffic=0,sel=1,delay=false,me={x:351,y:385},spamN=0;
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e};
+// direction arrows
+for(let i=0;i<50;i++){const f=(i+.5)/50,p=route.getPointAtLength(f*L),q=route.getPointAtLength(f*L+4);
+el("path",{d:"M-4,-4 L4,0 L-4,4",fill:"none",stroke:"var(--mut)","stroke-width":2,transform:`translate(${p.x},${p.y}) rotate(${Math.atan2(q.y-p.y,q.x-p.x)*180/Math.PI})`},$("arrows"))}
+function drawStops(){$("stops").innerHTML="";stops.forEach((s,i)=>{const g=el("g",{style:"cursor:pointer"},$("stops"));
+el("circle",{cx:s.x,cy:s.y,r:i==sel?11:8,fill:s.closed?"var(--bad)":"var(--card)",stroke:i==sel?"var(--pri)":"var(--tx)","stroke-width":3},g);
+if(s.closed){const t=el("text",{x:s.x,y:s.y+4,"text-anchor":"middle",fill:"#fff","font-size":11},g);t.textContent="✖"}
+const ox=s.side=="r"?16:-16,t=el("text",{x:s.x+ox,y:s.y+(s.side=="t"?-16:4),"text-anchor":s.side=="t"?"middle":(s.side=="r"?"start":"end"),stroke:"var(--land)","stroke-width":3,"paint-order":"stroke",fill:"var(--tx)","font-size":12,"font-weight":i==sel?700:400},g);
+if(s.side=="t")t.setAttribute("x",s.x);t.textContent=s.n;g.onclick=e=>{e.stopPropagation();sel=i;render()}})}
+function near(p){let b=0,d=1e9;stops.forEach((s,i)=>{const k=(s.x-p.x)**2+(s.y-p.y)**2;if(k<d){d=k;b=i}});return b}
+function drawMe(){$("me").innerHTML="";const c=el("circle",{cx:me.x,cy:me.y,r:16,fill:"#2f7df6",opacity:.25},$("me"));
+c.innerHTML='<animate attributeName="r" values="8;20;8" dur="2s" repeatCount="indefinite"/>';el("circle",{cx:me.x,cy:me.y,r:7,fill:"#2f7df6",stroke:"#fff","stroke-width":2},$("me"))}
+$("map").onclick=e=>{const m=$("map"),pt=m.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const p=pt.matrixTransform(m.getScreenCTM().inverse());me={x:p.x,y:p.y};sel=near(me);render()};
+// ETA logic
+function nextTram(si){let best=null;trams.forEach(t=>{if(t.broken)return;const d=((stops[si].f-t.f)%1+1)%1;if(!best||d<best.d)best={d,t}});return best}
+const fcast=[0,0,1,1,2,1];
+const SIMX=8,DW=20;
+function etaT(t,si,real){if(t.dwell>0&&t.at==si)return 0;const sp=real?SPD[traffic]*(delay?.7:1):1,d=((stops[si].f-t.f)%1+1)%1;let n=0;stops.forEach((s,j)=>{const dj=((s.f-t.f)%1+1)%1;if(j!=si&&!s.closed&&dj>0&&dj<d)n++});return d*LOOP/sp+n*DW*SIMX/60+(t.dwell>0?t.dwell*SIMX/60:0)}
+function eta(si){let b=null;trams.forEach(t=>{if(t.broken)return;const m=etaT(t,si,1);if(!b||m<b.m)b={m,t}});if(!b)return null;const norm=etaT(b.t,si,0);return{m:b.m,norm,extra:b.m-norm,t:b.t}}
+function render(){drawStops();drawMe();const s=stops[sel];$("sn").textContent=s.n+(sel==near(me)?" (nearest to you)":"");
+const e=eta(sel);$("eta").textContent=s.closed?"Closed":e?(e.m<.5?"Now":Math.max(1,Math.round(e.m))):"–";
+$("etaN").textContent=s.closed?"Stop temporarily closed":e?`Normally ~${Math.round(e.norm)} min · traffic/incidents +${Math.max(0,Math.round(e.extra))} min`:"No tram in service";
+$("tf").innerHTML="";TN.forEach((n,i)=>{const b=document.createElement("button");b.textContent=n;b.className=i==traffic?"on":"";b.onclick=()=>{traffic=i;render()};$("tf").appendChild(b)});
+$("fc").innerHTML=fcast.map(v=>`<span style="background:${COL[v]}"></span>`).join("");
+$("fcT").textContent=["Now → clear","In ~10-15 min: heavy traffic as classes let out, waits may add ~5 min","Then easing off"].join(" · ");
+renderSeats();renderAlerts();upd()}
+function upd(){const s=stops[sel],e=eta(sel);$("eta").textContent=s.closed?"Closed":e?(e.m<.5?"Now":Math.max(1,Math.round(e.m))):"–";$("etaN").textContent=s.closed?"Stop temporarily closed":e?`Normally ~${Math.round(e.norm)} min · traffic/incidents +${Math.max(0,Math.round(e.extra))} min`:"No tram in service";renderSeats();
+const nx=t=>{let b=null;stops.forEach(s=>{if(s.closed)return;const d=((s.f-t.f)%1+1)%1;if(d>0&&(!b||d<b.d))b={d,s}});return b?b.s.n:"–"};
+$("live").innerHTML='<b>Live tram status</b> <span class="sub">(each stop: 20 s wait ≈ 4 min in real life)</span>'+trams.map(t=>`<div>🚋${t.id}: ${t.broken?"broken down 🔧":t.dwell>0?`stopped at ${stops[t.at].n} · departs in ${Math.ceil(t.dwell)}s`:`heading to ${nx(t)}`}</div>`).join("")}
+function renderSeats(){$("seats").innerHTML=stops.map((s,i)=>{const n=nextTram(i),v=n?n.t.seats:null,c=v==null?0:v/20;
+return`<div class="st ${i==sel?"sel":""}" onclick="sel=${i};render()"><span>${s.closed?"⛔ ":""}${s.n}</span><div class="bar"><span style="width:${c*100}%;background:${c>.4?"var(--ok)":c>.15?"var(--warn)":"var(--bad)"}"></span></div><span>${v==null?"–":v+"/20"}</span></div>`}).join("")}
+function renderAlerts(){const a=[],ob=trams.find(t=>t.broken),cl=stops.find(s=>s.closed);
+if(ob)a.push(["bad",`Tram ${ob.id} has broken down`,"Suggestion: wait for the next tram, walk to a nearby stop, or use a campus bike."]);
+if(delay)a.push(["",'Line-wide delays (rain / congestion)',"Suggestion: if you are in a hurry, consider a short walk or a campus shortcut."]);
+if(cl){const j=near(cl),k=stops[(stops.indexOf(cl)+1)%stops.length];a.push(["bad",`"${cl.n}" stop is temporarily closed`,`Suggestion: board at "${k.n}" instead (~3 min walk).`])}
+if(traffic==2)a.push(["","Heavy traffic on campus","Waits are 5-10 min longer. Consider walking instead."]);
+if(!a.length)a.push(["","No incidents ✅","Trams are running normally."]);
+$("alerts").innerHTML=a.map(x=>`<div class="al ${x[0]}"><b>${x[1]}</b><i>${x[2]}</i></div>`).join("")}
+document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{const k=b.dataset.s;
+if(k=="break")trams[1].broken=!trams[1].broken;if(k=="delay")delay=!delay;if(k=="close")stops[4].closed=!stops[4].closed;
+b.classList.toggle("on");render()});
+// spam
+const msgs=["We hear you! 🚋💨","Driver: ...same speed as always 😆","The tram can't hear you, but we feel you!","Tired fingers? Take a break ☕","It's coming, it's coming (not really)"];
+$("spam").onclick=e=>{spamN++;$("cnt").textContent=spamN;const f=document.createElement("span");f.className="fl";f.textContent=["🚋","💨","⚡","🙏"][spamN%4];
+f.style.left=(e.offsetX||40)+"px";f.style.top="0px";$("spam").appendChild(f);setTimeout(()=>f.remove(),1000);
+if(spamN%10==0)$("msg").textContent=msgs[(spamN/10)%msgs.length|0]};
+// simulation
+let last=performance.now(),acc=0,n3=0;
+function tick(now){const dt=(now-last)/1000;last=now;acc+=dt;
+trams.forEach(t=>{if(t.broken)return;if(t.dwell>0){t.dwell-=dt;if(t.dwell<=0){t.dwell=0;t.f=(t.f+1e-4)%1}return}const nf=t.f+dt*SIMX/(LOOP*60)*SPD[traffic]*(delay?.7:1);let hit=-1;stops.forEach((s,i)=>{if(s.closed)return;const a=((s.f-t.f)%1+1)%1,b=nf-t.f;if(a>1e-5&&a<=b)hit=i});if(hit>=0){t.f=stops[hit].f;t.dwell=DW;t.at=hit;t.seats=Math.max(0,Math.min(20,t.seats+Math.floor(Math.random()*13)-6))}else t.f=nf%1});
+$("trams").innerHTML="";trams.forEach(t=>{const p=route.getPointAtLength(t.f*L),g=el("g",{},$("trams"));
+el("circle",{cx:p.x,cy:p.y,r:11,fill:t.broken?"var(--mut)":"var(--pri)",stroke:"#fff","stroke-width":2},g);if(t.dwell>0){el("circle",{cx:p.x,cy:p.y,r:17,fill:"none",stroke:"var(--pri)","stroke-width":2,"stroke-dasharray":"4 3"},g);const c=el("text",{x:p.x+20,y:p.y-12,fill:"var(--tx)","font-size":11,"font-weight":700,stroke:"var(--land)","stroke-width":3,"paint-order":"stroke"},g);c.textContent="⏸ "+Math.ceil(t.dwell)+"s"}
+const x=el("text",{x:p.x,y:p.y+4,"text-anchor":"middle",fill:"#fff","font-size":11,"font-weight":700},g);x.textContent=t.broken?"🔧":t.id});
+if(acc>1){acc=0;n3++;
+if(n3%4==0&&Math.random()<.4){traffic=Math.max(0,Math.min(2,traffic+(Math.random()<.5?-1:1)));render()}else upd()}
+
+requestAnimationFrame(tick)}
+setInterval(()=>$("clock").textContent=new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}),1000);
+$("clock").textContent=new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+sel=near(me);render();requestAnimationFrame(tick);
+</script></body></html>

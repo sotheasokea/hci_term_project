@@ -30,7 +30,6 @@ nav button b{display:block;font-size:20px;font-weight:400}nav button.on{color:va
 .chip.on{background:var(--tx);color:var(--card)}
 .bar{height:8px;border-radius:5px;background:var(--br);overflow:hidden;flex:1}.bar i{display:block;height:100%;transition:width .5s}
 .item{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:11px 12px;background:var(--soft);border-radius:12px;margin-bottom:8px;cursor:pointer}
-.item.near{outline:2px solid var(--ok)}.item.near .nm{color:var(--ok);font-size:16px}
 .item.sel{box-shadow:inset 0 0 0 2px var(--pri)}.nm{font-weight:600}.item .bar{grid-column:1/3;margin-top:5px;flex:none}
 .al{background:var(--soft);border-left:4px solid var(--warn);border-radius:12px;padding:11px 12px;margin-bottom:10px}
 .al.bad{border-color:var(--bad)}.al b{display:block}.al .alt{display:none;margin-top:8px;padding:8px;background:var(--card);border-radius:8px;font-size:13px}
@@ -103,7 +102,7 @@ normalService:"✅ All other stops running normally",updatedNow:"Updated just no
 hurryPrompt:"Waiting for the tram? Tap to cheer it on!",hurryButton:"🚋<br>Hurry up!",
 justForFun:"* Just for fun — it has no effect on the real tram.",
 navMap:"Map",navStops:"Stops",navAlerts:"Alerts",navHurry:"Hurry",
-nearest:"· nearest to you",closed:"Closed",nextTram:"Next tram",
+closed:"Closed",nextTram:"Next tram",
 closedHelp:"This stop is temporarily closed. Try",walk:"(3 min walk).",
 boarding:"boarding",min:"min",normally:"Normally {0} min · traffic +{1} min",
 freeSeats:"Free seats",traffic:"Traffic:",trafficLevels:["Light","Moderate","Heavy"],forecast:"Forecast: heavy in ~10 min (class break), easing after 30 min",
@@ -124,7 +123,7 @@ normalService:"✅ ป้ายอื่น ๆ ให้บริการต�
 hurryPrompt:"กำลังรอรถรางอยู่หรือเปล่า? แตะเพื่อส่งกำลังใจ!",hurryButton:"🚋<br>มาเร็ว ๆ นะ!",
 justForFun:"* เพื่อความสนุกเท่านั้น ไม่มีผลต่อเวลารถรางจริง",
 navMap:"แผนที่",navStops:"ป้าย",navAlerts:"แจ้งเตือน",navHurry:"เรียกรถ",
-nearest:"· ใกล้คุณที่สุด",closed:"ปิดชั่วคราว",nextTram:"รถรางคันถัดไป",
+closed:"ปิดชั่วคราว",nextTram:"รถรางคันถัดไป",
 closedHelp:"ป้ายนี้ปิดให้บริการชั่วคราว แนะนำให้ไปที่",walk:"(เดิน 3 นาที)",
 boarding:"กำลังจอดรับผู้โดยสาร",min:"นาที",normally:"ปกติ {0} นาที · การจราจรเพิ่ม {1} นาที",
 freeSeats:"ที่นั่งว่าง",traffic:"การจราจร:",trafficLevels:["เบา","ปานกลาง","หนาแน่น"],forecast:"คาดว่าการจราจรจะหนาแน่นในอีกประมาณ 10 นาที (ช่วงเปลี่ยนคาบ) และคลี่คลายหลังจาก 30 นาที",
@@ -139,7 +138,7 @@ const S=[
 {n:"Administrator",th:"อาคารบริหาร",x:325,y:411,s:"t",e:12,seat:12},{n:"Art Faculty",th:"คณะมัณฑนศิลป์",x:170,y:470,s:"l",e:6,seat:8},{n:"Union Canteen",th:"โรงอาหารยูเนี่ยน",x:170,y:367,s:"r",e:3,seat:17},
 {n:"Faculty of Science",th:"คณะวิทยาศาสตร์",x:170,y:296,s:"r",e:5,seat:7},{n:"Petcharat Canteen",th:"โรงอาหารเพชรรัตน์",x:170,y:183,s:"r",e:8,seat:2},{n:"Indee",th:"อินดี",x:178,y:155,s:"r",e:10,seat:11},{n:"Painting Faculty",th:"คณะจิตรกรรมฯ",x:22,y:102,s:"r",e:14,seat:6}];
 const stopName=s=>lang==="th"?s.th:s.n;
-const T=[[1,"Light"],[1.3,"Moderate"],[1.7,"Heavy"]];let tr=1,sel=3;const NEAR=3;
+const T=[[1,"Light"],[1.3,"Moderate"],[1.7,"Heavy"]];let tr=1,sel=0;
 const col=v=>v>8?"var(--ok)":v>3?"var(--warn)":"var(--bad)";
 const eta=s=>Math.round(s.e);
 function seatBar(v){return`<div class="bar"><i style="width:${v/20*100}%;background:${col(v)}"></i></div>`}
@@ -148,12 +147,12 @@ h+=`<g onclick="pick(${i})" style="cursor:pointer"><circle cx="${s.x}" cy="${s.y
 $("stops").innerHTML=h;
 drawTrams()}
 function sheet(){const s=S[sel];
-$("sheet").innerHTML=`<div class="row sp"><b style="font-size:16px">${stopName(s)}${sel==NEAR?` <span class="mut">${t("nearest")}</span>`:""}</b><span class="mut">${s.closed?t("closed"):t("nextTram")}</span></div>
+$("sheet").innerHTML=`<div class="row sp"><b style="font-size:16px">${stopName(s)}</b><span class="mut">${s.closed?t("closed"):t("nextTram")}</span></div>
 ${s.closed?`<div style="margin:10px 0" class="mut">${t("closedHelp")} <b>${stopName(S[5])}</b> ${t("walk")}.</div>`:`<div class="row" style="margin:8px 0 6px;align-items:flex-end"><div class="big">${s.e<.5?(lang==="th"?"ขณะนี้":"Now"):eta(s)}</div><div style="padding-bottom:3px">${s.e<.5?t("boarding"):t("min")}<div class="mut">${t("normally",Math.round(s.norm),Math.max(0,eta(s)-Math.round(s.norm)))}</div></div></div>
 <div class="row" style="margin-bottom:8px"><span class="mut">${t("freeSeats")}</span>${seatBar(s.seat)}<b style="font-size:13px">${s.seat}/20</b></div>`}
 <div class="row"><span class="mut">${t("traffic")}</span><span class="chip" style="background:${["var(--ok)","var(--warn)","var(--bad)"][tr]};color:#fff;border:0;cursor:default">● ${translations[lang].trafficLevels[tr]}</span></div>
 <div class="mut" style="margin-top:6px">${t("forecast")}</div>`}
-function list(){$("list").innerHTML=S.map((s,i)=>`<div class="item ${i==NEAR?"near":""} ${i==sel?"sel":""}" onclick="pick(${i});go('map')"><span class="nm">${s.closed?"⛔ ":""}${stopName(s)}${i==NEAR?" 📍":""}</span><b>${s.closed?t("closedList"):(s.e<.5?(lang==="th"?"ขณะนี้":"Now"):t("minArrival",eta(s)))}</b>${s.closed?"":seatBar(s.seat)}</div>`).join("")}
+function list(){$("list").innerHTML=S.map((s,i)=>`<div class="item ${i==sel?"sel":""}" onclick="pick(${i});go('map')"><span class="nm">${s.closed?"⛔ ":""}${stopName(s)}</span><b>${s.closed?t("closedList"):(s.e<.5?(lang==="th"?"ขณะนี้":"Now"):t("minArrival",eta(s)))}</b>${s.closed?"":seatBar(s.seat)}</div>`).join("")}
 function pick(i){sel=i;calc();drawMap();sheet();list()}
 function setT(i){tr=i;calc();sheet();list()}
 function go(t){if(t=="stops"){calc();list();setTimeout(()=>{const e=document.querySelector(".item.sel");e&&e.scrollIntoView({block:"center"})},0)}document.querySelectorAll(".scr").forEach(e=>e.classList.toggle("on",e.id=="s-"+t));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t==t))}

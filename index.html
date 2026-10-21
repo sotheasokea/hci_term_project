@@ -151,7 +151,7 @@ function sheet(){const s=S[sel];
 $("sheet").innerHTML=`<div class="row sp"><b style="font-size:16px">${stopName(s)}${sel==NEAR?` <span class="mut">${t("nearest")}</span>`:""}</b><span class="mut">${s.closed?t("closed"):t("nextTram")}</span></div>
 ${s.closed?`<div style="margin:10px 0" class="mut">${t("closedHelp")} <b>${stopName(S[5])}</b> ${t("walk")}.</div>`:`<div class="row" style="margin:8px 0 6px;align-items:flex-end"><div class="big">${s.e<.5?(lang==="th"?"ขณะนี้":"Now"):eta(s)}</div><div style="padding-bottom:3px">${s.e<.5?t("boarding"):t("min")}<div class="mut">${t("normally",Math.round(s.norm),Math.max(0,eta(s)-Math.round(s.norm)))}</div></div></div>
 <div class="row" style="margin-bottom:8px"><span class="mut">${t("freeSeats")}</span>${seatBar(s.seat)}<b style="font-size:13px">${s.seat}/20</b></div>`}
-<div class="row"><span class="mut">${t("traffic")}</span>${T.map((traffic,i)=>`<button class="chip ${i==tr?"on":""}" onclick="setT(${i})">${translations[lang].trafficLevels[i]}</button>`).join("")}</div>
+<div class="row"><span class="mut">${t("traffic")}</span><span class="chip" style="background:${["var(--ok)","var(--warn)","var(--bad)"][tr]};color:#fff;border:0;cursor:default">● ${translations[lang].trafficLevels[tr]}</span></div>
 <div class="mut" style="margin-top:6px">${t("forecast")}</div>`}
 function list(){$("list").innerHTML=S.map((s,i)=>`<div class="item ${i==NEAR?"near":""} ${i==sel?"sel":""}" onclick="pick(${i});go('map')"><span class="nm">${s.closed?"⛔ ":""}${stopName(s)}${i==NEAR?" 📍":""}</span><b>${s.closed?t("closedList"):(s.e<.5?(lang==="th"?"ขณะนี้":"Now"):t("minArrival",eta(s)))}</b>${s.closed?"":seatBar(s.seat)}</div>`).join("")}
 function pick(i){sel=i;calc();drawMap();sheet();list()}
@@ -168,10 +168,10 @@ tm[1].broken=true;tm[1].f=S[2].f-.01;
 function etaT(t,si,real){if(t.dwell>0&&t.at==si)return 0;const sp=real?1/T[tr][0]:1,d=((S[si].f-t.f)%1+1)%1;let n=0;S.forEach((s,j)=>{const dj=((s.f-t.f)%1+1)%1;if(j!=si&&!s.closed&&dj>0&&dj<d)n++});return d*LOOP/sp+n*DW*SIMX/60+(t.dwell>0?t.dwell*SIMX/60:0)}
 function calc(){S.forEach((s,i)=>{if(s.closed)return;let b=null;tm.forEach(t=>{if(t.broken)return;const m=etaT(t,i,1);if(!b||m<b.m)b={m,t}});if(b){s.e=b.m;s.norm=etaT(b.t,i,0);s.seat=b.t.seats}})}
 function drawTrams(){$("trams").innerHTML=tm.map(t=>{const p=route.getPointAtLength(t.f*L);return`<g><circle cx="${p.x}" cy="${p.y}" r="11" fill="${t.broken?"var(--mut)":"var(--pri)"}" stroke="#fff" stroke-width="2"/>${t.dwell>0?`<circle cx="${p.x}" cy="${p.y}" r="17" fill="none" stroke="var(--pri)" stroke-width="2" stroke-dasharray="4 3"/><text x="${p.x+20}" y="${p.y-12}" font-size="11" font-weight="700" fill="var(--tx)" stroke="var(--land)" stroke-width="3" paint-order="stroke">⏸ ${Math.ceil(t.dwell)}s</text>`:""}<text x="${p.x}" y="${p.y+4}" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">${t.broken?"🔧":t.id}</text></g>`}).join("")}
-let dn=0,last=performance.now(),acc=0;document.addEventListener("pointerdown",()=>dn=1);document.addEventListener("pointerup",()=>setTimeout(()=>dn=0,60));
+let dn=0, tc=0,last=performance.now(),acc=0;document.addEventListener("pointerdown",()=>dn=1);document.addEventListener("pointerup",()=>setTimeout(()=>dn=0,60));
 function tick(now){const dt=Math.min((now-last)/1000,.1);last=now;acc+=dt;
 tm.forEach(t=>{if(t.broken)return;if(t.dwell>0){t.dwell-=dt;if(t.dwell<=0){t.dwell=0;t.f=(t.f+1e-4)%1}return}const nf=t.f+dt*SIMX/(LOOP*60)/T[tr][0];let hit=-1,hd=2;S.forEach((s,i)=>{if(s.closed)return;const a=((s.f-t.f)%1+1)%1,b=nf-t.f;if(a>1e-5&&a<=b&&a<hd){hd=a;hit=i}});if(hit>=0){t.f=S[hit].f;t.dwell=DW;t.at=hit;t.seats=Math.max(0,Math.min(20,t.seats+Math.floor(Math.random()*13)-6))}else t.f=nf%1});
-drawTrams();if(acc>1){acc=0;calc();if(!dn){sheet();list()}}requestAnimationFrame(tick)}
+drawTrams();drawTrams();if(acc>1){acc=0;tc++;if(tc%12==0)tr+=tr==0?1:tr==2?-1:(Math.random()<.5?-1:1);calc();if(!dn){sheet();list()}}requestAnimationFrame(tick)}
 function applyLanguage(){
 document.documentElement.lang=lang;
 document.title=translations[lang].pageTitle;

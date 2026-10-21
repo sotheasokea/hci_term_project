@@ -35,6 +35,10 @@ nav button b{display:block;font-size:20px;font-weight:400}nav button.on{color:va
 .al.bad{border-color:var(--bad)}.al b{display:block}.al .alt{display:none;margin-top:8px;padding:8px;background:var(--card);border-radius:8px;font-size:13px}
 .al.open .alt{display:block}
 .btn{border:0;background:var(--pri);color:#fff;border-radius:12px;font:inherit;padding:8px 14px;cursor:pointer}
+.recommendation{position:absolute;inset:0;z-index:10;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.48)}
+.recommendation[hidden]{display:none}.recommendation-card{width:100%;max-width:320px;padding:20px;background:var(--card);color:var(--tx);border:1px solid var(--br);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.recommendation-card h2{margin:0 0 10px;font-size:18px}.recommendation-card p{margin:0 0 18px;line-height:1.5;color:var(--tx)}
+.recommendation-card .btn{display:block;margin-left:auto}
 .hurry{width:210px;height:210px;border-radius:50%;border:0;background:var(--pri);color:#fff;font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 10px 0 #a63a18;position:relative}
 .hurry:active{transform:translateY(8px);box-shadow:0 2px 0 #a63a18}
 .fl{position:absolute;left:50%;top:30%;pointer-events:none;animation:up 1.1s forwards;font-size:26px}
@@ -75,6 +79,9 @@ nav button b{display:block;font-size:20px;font-weight:400}nav button.on{color:va
 <div class="mut" data-i18n="justForFun" style="margin-top:12px">* Just for fun — it has no effect on the real tram.</div>
 </section>
 </main>
+<div class="recommendation" id="recommendation" hidden role="dialog" aria-modal="true" aria-labelledby="recommendationTitle">
+<div class="recommendation-card"><h2 id="recommendationTitle"></h2><p id="recommendationText"></p><button class="btn" id="recommendationClose" type="button">OK</button></div>
+</div>
 <nav>
 <button class="on" data-t="map"><b>🗺️</b><span data-i18n="navMap">Map</span></button>
 <button data-t="stops"><b>💺</b><span data-i18n="navStops">Stops</span></button>
@@ -96,6 +103,7 @@ breakdownAlternative:"Wait for Tram 3 (~7 min), or walk 3 min to",administrator:
 trafficAlert:"🐢 Heavy traffic after classes",trafficDetails:"Expected 4:30–5:00 PM · adds ~5 min",
 trafficAlternative:"For short trips consider walking, or use a campus bike. Sports Field → North side is ~8 min on foot.",
 normalService:"✅ All other stops running normally",updatedNow:"Updated just now",
+selectStopPrompt:"Select a stop on the map to see its arrival time and seat availability.",
 tramBrokenTitle:"🔧 Tram {0} broke down near {1}",tramBrokenDetails:"Out of service · updated just now",tramBrokenAlternative:"Wait for another tram or select a nearby stop.",
 tramRestoredTitle:"✅ Tram {0} is back in service",tramRestoredDetails:"Service resumed · updated just now",tramRestoredAlternative:"This tram is running again.",
 trafficEventTitle:"🐢 Heavy traffic near {0}",trafficEventDetails:"Expect a delay of about 5 minutes · updated just now",trafficEventAlternative:"Allow extra travel time or use another nearby stop.",
@@ -104,6 +112,12 @@ delayEventTitle:"⏱️ Tram service is delayed near {0}",delayEventDetails:"An 
 delayClearedTitle:"✅ Tram delays have cleared near {0}",delayClearedDetails:"Service is back on schedule · updated just now",delayClearedAlternative:"Check the map for current tram locations.",
 stopClosedTitle:"⛔ {0} is temporarily closed",stopClosedDetails:"Trams are skipping this stop · updated just now",stopClosedAlternative:"Use a nearby open stop instead.",
 stopReopenedTitle:"✅ {0} has reopened",stopReopenedDetails:"Trams are stopping here again · updated just now",stopReopenedAlternative:"Service has returned to this stop.",
+recommendationTitle:"Travel recommendation",
+recommendationWait:"The tram is expected in {0} min. We recommend waiting for it.",
+recommendationWalk:"The tram is expected in {0} min, Consider walking instead.",
+recommendationClosed:"This stop is closed. Walk to an open nearby stop to catch a tram.",
+recommendationNoService:"No trams are currently running. Consider walking or checking the service alerts.",
+recommendationClose:"Got it",
 hurryPrompt:"Waiting for the tram? Tap to cheer it on!",hurryButton:"🚋<br>Hurry up!",
 justForFun:"* Just for fun — it has no effect on the real tram.",
 navMap:"Map",navStops:"Stops",navAlerts:"Alerts",navHurry:"Hurry",
@@ -125,6 +139,7 @@ breakdownAlternative:"รอรถรางคันที่ 3 (ประมา
 trafficAlert:"🐢 การจราจรหนาแน่นหลังเลิกเรียน",trafficDetails:"คาดว่าเวลา 16:30–17:00 น. · เพิ่มประมาณ 5 นาที",
 trafficAlternative:"หากเดินทางระยะใกล้ ลองเดินหรือใช้จักรยานของมหาวิทยาลัย จากสนามกีฬาไปทางทิศเหนือใช้เวลาเดินประมาณ 8 นาที",
 normalService:"✅ ป้ายอื่น ๆ ให้บริการตามปกติ",updatedNow:"อัปเดตเมื่อสักครู่",
+selectStopPrompt:"เลือกป้ายบนแผนที่เพื่อดูเวลารถรางมาถึงและที่นั่งว่าง",
 tramBrokenTitle:"🔧 รถรางคันที่ {0} ขัดข้องใกล้{1}",tramBrokenDetails:"งดให้บริการชั่วคราว · อัปเดตเมื่อสักครู่",tramBrokenAlternative:"รอรถรางคันอื่นหรือเลือกป้ายใกล้เคียง",
 tramRestoredTitle:"✅ รถรางคันที่ {0} กลับมาให้บริการแล้ว",tramRestoredDetails:"เริ่มให้บริการอีกครั้ง · อัปเดตเมื่อสักครู่",tramRestoredAlternative:"รถรางคันนี้กลับมาวิ่งตามปกติแล้ว",
 trafficEventTitle:"🐢 การจราจรหนาแน่นใกล้{0}",trafficEventDetails:"คาดว่าจะล่าช้าประมาณ 5 นาที · อัปเดตเมื่อสักครู่",trafficEventAlternative:"เผื่อเวลาเดินทางเพิ่มหรือใช้ป้ายใกล้เคียง",
@@ -133,6 +148,12 @@ delayEventTitle:"⏱️ รถรางล่าช้าใกล้{0}",delayE
 delayClearedTitle:"✅ รถรางกลับมาให้บริการตามปกติใกล้{0}",delayClearedDetails:"ไม่มีความล่าช้าแล้ว · อัปเดตเมื่อสักครู่",delayClearedAlternative:"ตรวจสอบตำแหน่งรถรางล่าสุดบนแผนที่",
 stopClosedTitle:"⛔{0}ปิดให้บริการชั่วคราว",stopClosedDetails:"รถรางงดจอดที่ป้ายนี้ · อัปเดตเมื่อสักครู่",stopClosedAlternative:"โปรดใช้ป้ายที่เปิดให้บริการใกล้เคียง",
 stopReopenedTitle:"✅{0}กลับมาเปิดให้บริการแล้ว",stopReopenedDetails:"รถรางกลับมาจอดที่ป้ายนี้ · อัปเดตเมื่อสักครู่",stopReopenedAlternative:"ป้ายนี้กลับมาให้บริการตามปกติแล้ว",
+recommendationTitle:"คำแนะนำการเดินทาง",
+recommendationWait:"รถรางคาดว่าจะมาถึงใน {0} นาที แนะนำให้รอรถราง",
+recommendationWalk:"รถรางคาดว่าจะมาถึงใน {0} นาที แนะนำให้เดินแทน",
+recommendationClosed:"ป้ายนี้ปิดให้บริการ กรุณาเดินไปยังป้ายใกล้เคียงที่เปิดให้บริการ",
+recommendationNoService:"ขณะนี้ไม่มีรถรางให้บริการ แนะนำให้เดินหรือตรวจสอบการแจ้งเตือน",
+recommendationClose:"รับทราบ",
 hurryPrompt:"กำลังรอรถรางอยู่หรือเปล่า? แตะเพื่อส่งกำลังใจ!",hurryButton:"🚋<br>มาเร็ว ๆ นะ!",
 justForFun:"* เพื่อความสนุกเท่านั้น ไม่มีผลต่อเวลารถรางจริง",
 navMap:"แผนที่",navStops:"ป้าย",navAlerts:"แจ้งเตือน",navHurry:"เรียกรถ",
@@ -151,7 +172,7 @@ const S=[
 {n:"Administrator",th:"อาคารบริหาร",x:325,y:411,s:"t",e:12,seat:12},{n:"Art Faculty",th:"คณะมัณฑนศิลป์",x:170,y:470,s:"l",e:6,seat:8},{n:"Union Canteen",th:"โรงอาหารยูเนี่ยน",x:170,y:367,s:"r",e:3,seat:17},
 {n:"Faculty of Science",th:"คณะวิทยาศาสตร์",x:170,y:296,s:"r",e:5,seat:7},{n:"Petcharat Canteen",th:"โรงอาหารเพชรรัตน์",x:170,y:183,s:"r",e:8,seat:2},{n:"Indee",th:"อินดี",x:178,y:155,s:"r",e:10,seat:11},{n:"Painting Faculty",th:"คณะจิตรกรรมฯ",x:22,y:102,s:"r",e:14,seat:6}];
 const stopName=s=>lang==="th"?s.th:s.n;
-const T=[[1,"Light"],[1.3,"Moderate"],[1.7,"Heavy"]];let tr=1,sel=0;
+const T=[[1,"Light"],[1.3,"Moderate"],[1.7,"Heavy"]];let tr=1,sel=null;
 const col=v=>v>8?"var(--ok)":v>3?"var(--warn)":"var(--bad)";
 const eta=s=>Math.round(s.e);
 function seatBar(v){return`<div class="bar"><i style="width:${v/20*100}%;background:${col(v)}"></i></div>`}
@@ -159,14 +180,38 @@ function drawMap(){let h="";S.forEach((s,i)=>{const ox=s.s=="r"?16:-16;
 h+=`<g onclick="pick(${i})" style="cursor:pointer"><circle cx="${s.x}" cy="${s.y}" r="${i==sel?12:8}" fill="${s.closed?"var(--bad)":"var(--card)"}" stroke="${i==sel?"var(--pri)":"var(--tx)"}" stroke-width="3"/>${s.closed?`<text x="${s.x}" y="${s.y+4}" text-anchor="middle" fill="#fff" font-size="11">✖</text>`:""}<text x="${s.s=="t"?s.x:s.x+ox}" y="${s.y+(s.s=="t"?-16:4)}" text-anchor="${s.s=="t"?"middle":s.s=="r"?"start":"end"}" font-size="12" font-weight="${i==sel?700:400}" fill="var(--tx)" stroke="var(--land)" stroke-width="3" paint-order="stroke">${stopName(s)}</text></g>`});
 $("stops").innerHTML=h;
 drawTrams()}
-function sheet(){const s=S[sel];
+function sheet(){if(sel===null){$("sheet").innerHTML=`<div class="mut">${t("selectStopPrompt")}</div>`;return}const s=S[sel];
 $("sheet").innerHTML=`<div class="row sp"><b style="font-size:16px">${stopName(s)}</b><span class="mut">${s.closed?t("closed"):t("nextTram")}</span></div>
 ${s.closed?`<div style="margin:10px 0" class="mut">${t("closedHelp")} <b>${stopName(S[5])}</b> ${t("walk")}.</div>`:`<div class="row" style="margin:8px 0 6px;align-items:flex-end"><div class="big">${s.e<.5?(lang==="th"?"ขณะนี้":"Now"):eta(s)}</div><div style="padding-bottom:3px">${s.e<.5?t("boarding"):t("min")}<div class="mut">${t("normally",Math.round(s.norm),Math.max(0,eta(s)-Math.round(s.norm)))}</div></div></div>
 <div class="row" style="margin-bottom:8px"><span class="mut">${t("freeSeats")}</span>${seatBar(s.seat)}<b style="font-size:13px">${s.seat}/20</b></div>`}
 <div class="row"><span class="mut">${t("traffic")}</span><span class="chip" style="background:${["var(--ok)","var(--warn)","var(--bad)"][tr]};color:#fff;border:0;cursor:default">● ${translations[lang].trafficLevels[tr]}</span></div>
 <div class="mut" style="margin-top:6px">${t("forecast")}</div>`}
 function list(){$("list").innerHTML=S.map((s,i)=>`<div class="item ${i==sel?"sel":""}" onclick="pick(${i});go('map')"><span class="nm">${s.closed?"⛔ ":""}${stopName(s)}</span><b>${s.closed?t("closedList"):(s.e<.5?(lang==="th"?"ขณะนี้":"Now"):t("minArrival",eta(s)))}</b>${s.closed?"":seatBar(s.seat)}</div>`).join("")}
-function pick(i){sel=i;calc();drawMap();sheet();list()}
+let recommendationTimer=null,recommendationStop=null;
+function showRecommendation(stopIndex){
+recommendationStop=stopIndex;
+const stop=S[stopIndex],text=$("recommendationText");
+if(stop.closed)text.textContent=t("recommendationClosed");
+else if(!tm.some(tram=>!tram.broken))text.textContent=t("recommendationNoService");
+else{
+const minutes=Math.max(0,Math.round(stop.e));
+text.textContent=stop.e<=15?t("recommendationWait",minutes):t("recommendationWalk",minutes)
+}
+$("recommendationTitle").textContent=t("recommendationTitle");
+$("recommendationClose").textContent=t("recommendationClose");
+$("recommendation").hidden=false;
+$("recommendationClose").focus()
+}
+function scheduleRecommendation(stopIndex){
+clearTimeout(recommendationTimer);
+$("recommendation").hidden=true;
+recommendationTimer=setTimeout(()=>showRecommendation(stopIndex),2000)
+}
+function closeRecommendation(){$("recommendation").hidden=true}
+$("recommendationClose").onclick=closeRecommendation;
+$("recommendation").onclick=e=>{if(e.target===$("recommendation"))closeRecommendation()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("recommendation").hidden)closeRecommendation()});
+function pick(i){sel=i;calc();drawMap();sheet();list();scheduleRecommendation(i)}
 function setT(i){tr=i;calc();sheet();list()}
 function go(t){if(t=="stops"){calc();list();setTimeout(()=>{const e=document.querySelector(".item.sel");e&&e.scrollIntoView({block:"center"})},0)}document.querySelectorAll(".scr").forEach(e=>e.classList.toggle("on",e.id=="s-"+t));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t==t))}
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>go(b.dataset.t));
@@ -257,6 +302,7 @@ $("roadLabel").textContent=t("roadLabel");$("directionLabel").textContent=t("dir
 if(lastMessage>=0)$("msg").textContent=translations[lang].messages[lastMessage];
 drawMap();sheet();list()
 renderAlerts();updateServiceStatus()
+if(recommendationStop!==null&&!$("recommendation").hidden)showRecommendation(recommendationStop)
 }
 $("languageToggle").onclick=()=>{lang=lang==="en"?"th":"en";applyLanguage()};
 calc();applyLanguage();setInterval(updateRandomAlert,15000);requestAnimationFrame(tick);

@@ -65,10 +65,7 @@ nav button b{display:block;font-size:20px;font-weight:400}nav button.on{color:va
 <!-- ALERTS -->
 <section class="scr" id="s-alerts"><div class="scroll">
 <div class="mut" data-i18n="alertsTitle" style="margin:4px 2px 10px">Delay & service alerts</div>
-<div class="al bad" onclick="this.classList.toggle('open')"><b data-i18n="breakdownTitle">🔧 Tram 2 broke down near Education B1</b><span class="mut" data-i18n="breakdownDetails">Waits at nearby stops +6 min · 5 min ago</span><div class="mut" data-i18n="tapAlternatives" style="margin-top:6px">Tap for alternatives ▾</div><div class="alt"><span data-i18n="breakdownAlternative">Wait for Tram 3 (~7 min), or walk 3 min to</span> <b data-i18n="administrator" style="display:inline">Administrator</b> <span data-i18n="boardThere">and board there.</span></div></div>
-
-<div class="al" onclick="this.classList.toggle('open')"><b data-i18n="trafficAlert">🐢 Heavy traffic after classes</b><span class="mut" data-i18n="trafficDetails">Expected 4:30–5:00 PM · adds ~5 min</span><div class="mut" data-i18n="tapAlternatives" style="margin-top:6px">Tap for alternatives ▾</div><div class="alt" data-i18n="trafficAlternative">For short trips consider walking, or use a campus bike. Sports Field → North side is ~8 min on foot.</div></div>
-<div class="al" style="border-color:var(--ok)"><b data-i18n="normalService">✅ All other stops running normally</b><span class="mut" data-i18n="updatedNow">Updated just now</span></div>
+<div id="alertsList"></div>
 </div></section>
 <!-- HURRY -->
 <section class="scr" id="s-hurry" style="align-items:center;justify-content:center;text-align:center;padding:20px">
@@ -81,7 +78,7 @@ nav button b{display:block;font-size:20px;font-weight:400}nav button.on{color:va
 <nav>
 <button class="on" data-t="map"><b>🗺️</b><span data-i18n="navMap">Map</span></button>
 <button data-t="stops"><b>💺</b><span data-i18n="navStops">Stops</span></button>
-<button data-t="alerts"><b>⚠️</b><span data-i18n="navAlerts">Alerts</span><span class="badge">2</span></button>
+<button data-t="alerts"><b>⚠️</b><span data-i18n="navAlerts">Alerts</span><span class="badge" id="alertCount">1</span></button>
 <button data-t="hurry"><b>📣</b><span data-i18n="navHurry">Hurry</span></button>
 </nav>
 </div>
@@ -90,7 +87,7 @@ const $=id=>document.getElementById(id);
 const translations={
 en:{
 pageTitle:"Campus Tram – Prototype",
-title:"Campus Tram",subtitle:"Sanam Chandra Campus · 4 of 5 trams running · Prototype",
+title:"Campus Tram",subtitle:"Sanam Chandra Campus · {0} of 5 trams running · Prototype",
 roadLabel:"Song Phon Road",directionLabel:"Direction: counterclockwise ↺",
 stopsIntro:"Live arrival time and free seats at every stop. Tap a stop to see it on the map.",
 alertsTitle:"Delay & service alerts",breakdownTitle:"🔧 Tram 2 broke down near Education B1",
@@ -99,6 +96,14 @@ breakdownAlternative:"Wait for Tram 3 (~7 min), or walk 3 min to",administrator:
 trafficAlert:"🐢 Heavy traffic after classes",trafficDetails:"Expected 4:30–5:00 PM · adds ~5 min",
 trafficAlternative:"For short trips consider walking, or use a campus bike. Sports Field → North side is ~8 min on foot.",
 normalService:"✅ All other stops running normally",updatedNow:"Updated just now",
+tramBrokenTitle:"🔧 Tram {0} broke down near {1}",tramBrokenDetails:"Out of service · updated just now",tramBrokenAlternative:"Wait for another tram or select a nearby stop.",
+tramRestoredTitle:"✅ Tram {0} is back in service",tramRestoredDetails:"Service resumed · updated just now",tramRestoredAlternative:"This tram is running again.",
+trafficEventTitle:"🐢 Heavy traffic near {0}",trafficEventDetails:"Expect a delay of about 5 minutes · updated just now",trafficEventAlternative:"Allow extra travel time or use another nearby stop.",
+trafficClearedTitle:"✅ Traffic is moving normally near {0}",trafficClearedDetails:"Traffic delay cleared · updated just now",trafficClearedAlternative:"Trams are moving normally again.",
+delayEventTitle:"⏱️ Tram service is delayed near {0}",delayEventDetails:"An operating delay was reported · updated just now",delayEventAlternative:"Check arrival times for the latest estimate.",
+delayClearedTitle:"✅ Tram delays have cleared near {0}",delayClearedDetails:"Service is back on schedule · updated just now",delayClearedAlternative:"Check the map for current tram locations.",
+stopClosedTitle:"⛔ {0} is temporarily closed",stopClosedDetails:"Trams are skipping this stop · updated just now",stopClosedAlternative:"Use a nearby open stop instead.",
+stopReopenedTitle:"✅ {0} has reopened",stopReopenedDetails:"Trams are stopping here again · updated just now",stopReopenedAlternative:"Service has returned to this stop.",
 hurryPrompt:"Waiting for the tram? Tap to cheer it on!",hurryButton:"🚋<br>Hurry up!",
 justForFun:"* Just for fun — it has no effect on the real tram.",
 navMap:"Map",navStops:"Stops",navAlerts:"Alerts",navHurry:"Hurry",
@@ -111,7 +116,7 @@ messages:["We hear you! 🚋💨","Driver: ...same speed as always 😆","The tr
 },
 th:{
 pageTitle:"รถรางภายในมหาวิทยาลัย – ต้นแบบ",
-title:"รถรางภายในมหาวิทยาลัย",subtitle:"มหาวิทยาลัยศิลปากร วิทยาเขตพระราชวังสนามจันทร์ · รถรางให้บริการ 4 จาก 5 คัน · ต้นแบบ",
+title:"รถรางภายในมหาวิทยาลัย",subtitle:"มหาวิทยาลัยศิลปากร วิทยาเขตพระราชวังสนามจันทร์ · ให้บริการ {0} จาก 5 คัน · ต้นแบบ",
 roadLabel:"ถนนทรงพล",directionLabel:"ทิศทาง: ทวนเข็มนาฬิกา ↺",
 stopsIntro:"เวลารถรางมาถึงและจำนวนที่นั่งว่างของทุกป้าย แตะป้ายเพื่อดูตำแหน่งบนแผนที่",
 alertsTitle:"แจ้งเตือนความล่าช้าและบริการ",breakdownTitle:"🔧 รถรางคันที่ 2 ขัดข้องใกล้อาคารศึกษา B1",
@@ -120,6 +125,14 @@ breakdownAlternative:"รอรถรางคันที่ 3 (ประมา
 trafficAlert:"🐢 การจราจรหนาแน่นหลังเลิกเรียน",trafficDetails:"คาดว่าเวลา 16:30–17:00 น. · เพิ่มประมาณ 5 นาที",
 trafficAlternative:"หากเดินทางระยะใกล้ ลองเดินหรือใช้จักรยานของมหาวิทยาลัย จากสนามกีฬาไปทางทิศเหนือใช้เวลาเดินประมาณ 8 นาที",
 normalService:"✅ ป้ายอื่น ๆ ให้บริการตามปกติ",updatedNow:"อัปเดตเมื่อสักครู่",
+tramBrokenTitle:"🔧 รถรางคันที่ {0} ขัดข้องใกล้{1}",tramBrokenDetails:"งดให้บริการชั่วคราว · อัปเดตเมื่อสักครู่",tramBrokenAlternative:"รอรถรางคันอื่นหรือเลือกป้ายใกล้เคียง",
+tramRestoredTitle:"✅ รถรางคันที่ {0} กลับมาให้บริการแล้ว",tramRestoredDetails:"เริ่มให้บริการอีกครั้ง · อัปเดตเมื่อสักครู่",tramRestoredAlternative:"รถรางคันนี้กลับมาวิ่งตามปกติแล้ว",
+trafficEventTitle:"🐢 การจราจรหนาแน่นใกล้{0}",trafficEventDetails:"คาดว่าจะล่าช้าประมาณ 5 นาที · อัปเดตเมื่อสักครู่",trafficEventAlternative:"เผื่อเวลาเดินทางเพิ่มหรือใช้ป้ายใกล้เคียง",
+trafficClearedTitle:"✅ การจราจรใกล้{0}คล่องตัวตามปกติ",trafficClearedDetails:"สถานการณ์การจราจรคลี่คลายแล้ว · อัปเดตเมื่อสักครู่",trafficClearedAlternative:"รถรางกลับมาวิ่งตามปกติแล้ว",
+delayEventTitle:"⏱️ รถรางล่าช้าใกล้{0}",delayEventDetails:"มีรายงานความล่าช้า · อัปเดตเมื่อสักครู่",delayEventAlternative:"ตรวจสอบเวลาถึงโดยประมาณอีกครั้ง",
+delayClearedTitle:"✅ รถรางกลับมาให้บริการตามปกติใกล้{0}",delayClearedDetails:"ไม่มีความล่าช้าแล้ว · อัปเดตเมื่อสักครู่",delayClearedAlternative:"ตรวจสอบตำแหน่งรถรางล่าสุดบนแผนที่",
+stopClosedTitle:"⛔{0}ปิดให้บริการชั่วคราว",stopClosedDetails:"รถรางงดจอดที่ป้ายนี้ · อัปเดตเมื่อสักครู่",stopClosedAlternative:"โปรดใช้ป้ายที่เปิดให้บริการใกล้เคียง",
+stopReopenedTitle:"✅{0}กลับมาเปิดให้บริการแล้ว",stopReopenedDetails:"รถรางกลับมาจอดที่ป้ายนี้ · อัปเดตเมื่อสักครู่",stopReopenedAlternative:"ป้ายนี้กลับมาให้บริการตามปกติแล้ว",
 hurryPrompt:"กำลังรอรถรางอยู่หรือเปล่า? แตะเพื่อส่งกำลังใจ!",hurryButton:"🚋<br>มาเร็ว ๆ นะ!",
 justForFun:"* เพื่อความสนุกเท่านั้น ไม่มีผลต่อเวลารถรางจริง",
 navMap:"แผนที่",navStops:"ป้าย",navAlerts:"แจ้งเตือน",navHurry:"เรียกรถ",
@@ -170,12 +183,69 @@ const route=$("route"),L=route.getTotalLength(),SIMX=18,DW=10,LOOP=24;
 S.forEach(s=>{let b=0,d=1e9;for(let l=0;l<L;l+=1){const p=route.getPointAtLength(l),k=(p.x-s.x)**2+(p.y-s.y)**2;if(k<d){d=k;b=l}}s.f=b/L;const q=route.getPointAtLength(b);s.x=q.x;s.y=q.y});
 const tm=Array.from({length:5},(_,i)=>({f:i/5,seats:[14,6,10,12,8][i],broken:false,id:i+1,dwell:0,at:-1}));
 tm[1].broken=true;tm[1].f=S[2].f-.01;
-function etaT(t,si,real){if(t.dwell>0&&t.at==si)return 0;const sp=real?1/T[tr][0]:1,d=((S[si].f-t.f)%1+1)%1;let n=0;S.forEach((s,j)=>{const dj=((s.f-t.f)%1+1)%1;if(j!=si&&!s.closed&&dj>0&&dj<d)n++});return d*LOOP/sp+n*DW*SIMX/60+(t.dwell>0?t.dwell*SIMX/60:0)}
+S.forEach(s=>s.extraWait=0);
+let activeAlerts=[{type:"tramBroken",tramId:2,stopIndex:2}],alertNotice=null;
+function renderAlerts(){
+const alerts=alertNotice?[...activeAlerts,alertNotice]:activeAlerts;
+$("alertCount").textContent=activeAlerts.length;
+$("alertCount").hidden=activeAlerts.length===0;
+if(!alerts.length){$("alertsList").innerHTML=`<div class="al" style="border-color:var(--ok)"><b>${t("normalService")}</b><span class="mut">${t("updatedNow")}</span></div>`;return}
+$("alertsList").innerHTML=alerts.map(a=>{
+const place=stopName(S[a.stopIndex??2]),args=a.type.startsWith("tram")?[a.tramId,place]:[place],severity=["tramBroken","stopClosed"].includes(a.type)?" bad":"";
+return`<div class="al${severity}" onclick="this.classList.toggle('open')"><b>${t(a.type+"Title",...args)}</b><span class="mut">${t(a.type+"Details")}</span><div class="mut" style="margin-top:6px">${t("tapAlternatives")}</div><div class="alt">${t(a.type+"Alternative")}</div></div>`
+}).join("")
+}
+function updateServiceStatus(){document.querySelector('[data-i18n="subtitle"]').textContent=t("subtitle",tm.filter(t=>!t.broken).length)}
+function updateStopWait(stopIndex){
+const stop=S[stopIndex],previous=stop.extraWait;
+stop.extraWait=activeAlerts.reduce((total,a)=>total+(a.stopIndex===stopIndex?(a.type==="delayEvent"||a.type==="trafficEvent"?15:0):0),0);
+if(stop.extraWait>previous)tm.forEach(t=>{if(!t.broken&&t.dwell>0&&t.at===stopIndex)t.dwell+=stop.extraWait-previous})
+}
+function updateRandomAlert(){
+const broken=tm.filter(t=>t.broken),closed=S.map((s,i)=>({s,i})).filter(x=>x.s.closed);
+const choices=["trafficEvent","delayEvent"];
+if(broken.length)choices.push("tramRestore");else choices.push("tramBreak");
+if(closed.length)choices.push("stopReopen");else choices.push("stopClose");
+if(activeAlerts.some(a=>a.type==="trafficEvent"))choices.push("trafficClear");
+if(activeAlerts.some(a=>a.type==="delayEvent"))choices.push("delayClear");
+const choice=choices[Math.floor(Math.random()*choices.length)];
+alertNotice=null;
+if(choice==="tramBreak"){
+const tram=tm.filter(t=>!t.broken)[Math.floor(Math.random()*tm.filter(t=>!t.broken).length)],stopIndex=Math.floor(Math.random()*S.length);
+tram.broken=true;tram.f=S[stopIndex].f;
+activeAlerts.push({type:"tramBroken",tramId:tram.id,stopIndex});
+}else if(choice==="tramRestore"){
+const tram=broken[Math.floor(Math.random()*broken.length)];
+tram.broken=false;
+activeAlerts=activeAlerts.filter(a=>a.type!=="tramBroken"||a.tramId!==tram.id);
+alertNotice={type:"tramRestored",tramId:tram.id};
+}else if(choice==="stopClose"){
+const candidates=S.map((s,i)=>({s,i})).filter(x=>!x.s.closed),stop=candidates[Math.floor(Math.random()*candidates.length)];
+stop.s.closed=true;activeAlerts.push({type:"stopClosed",stopIndex:stop.i});
+}else if(choice==="stopReopen"){
+const stop=closed[Math.floor(Math.random()*closed.length)];
+stop.s.closed=false;activeAlerts=activeAlerts.filter(a=>a.type!=="stopClosed"||a.stopIndex!==stop.i);
+alertNotice={type:"stopReopened",stopIndex:stop.i};
+}else if(choice==="trafficEvent"||choice==="delayEvent"){
+const type=choice,candidates=S.map((s,i)=>({s,i})).filter(x=>!x.s.closed),stopIndex=candidates[Math.floor(Math.random()*candidates.length)].i,previous=activeAlerts.filter(a=>a.type===type);
+activeAlerts=activeAlerts.filter(a=>a.type!==type);
+previous.forEach(a=>updateStopWait(a.stopIndex));
+activeAlerts.push({type,stopIndex});
+updateStopWait(stopIndex);
+}else{
+const type=choice==="trafficClear"?"trafficEvent":"delayEvent",existing=activeAlerts.find(a=>a.type===type),stopIndex=existing.stopIndex;
+activeAlerts=activeAlerts.filter(a=>a.type!==type);
+updateStopWait(stopIndex);
+alertNotice={type:choice==="trafficClear"?"trafficCleared":"delayCleared",stopIndex};
+}
+calc();drawMap();sheet();list();renderAlerts();updateServiceStatus()
+}
+function etaT(t,si,real){if(t.dwell>0&&t.at==si)return 0;const sp=real?1/T[tr][0]:1,d=((S[si].f-t.f)%1+1)%1;let wait=0;S.forEach((s,j)=>{const dj=((s.f-t.f)%1+1)%1;if(j!=si&&!s.closed&&dj>0&&dj<d)wait+=(DW+s.extraWait)*SIMX/60});return d*LOOP/sp+wait+(t.dwell>0?t.dwell*SIMX/60:0)}
 function calc(){S.forEach((s,i)=>{if(s.closed)return;let b=null;tm.forEach(t=>{if(t.broken)return;const m=etaT(t,i,1);if(!b||m<b.m)b={m,t}});if(b){s.e=b.m;s.norm=etaT(b.t,i,0);s.seat=b.t.seats}})}
 function drawTrams(){$("trams").innerHTML=tm.map(t=>{const p=route.getPointAtLength(t.f*L);return`<g><circle cx="${p.x}" cy="${p.y}" r="11" fill="${t.broken?"var(--mut)":"var(--pri)"}" stroke="#fff" stroke-width="2"/>${t.dwell>0?`<circle cx="${p.x}" cy="${p.y}" r="17" fill="none" stroke="var(--pri)" stroke-width="2" stroke-dasharray="4 3"/><text x="${p.x+20}" y="${p.y-12}" font-size="11" font-weight="700" fill="var(--tx)" stroke="var(--land)" stroke-width="3" paint-order="stroke">⏸ ${Math.ceil(t.dwell)}s</text>`:""}<text x="${p.x}" y="${p.y+4}" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">${t.broken?"🔧":t.id}</text></g>`}).join("")}
 let dn=0, tc=0,last=performance.now(),acc=0;document.addEventListener("pointerdown",()=>dn=1);document.addEventListener("pointerup",()=>setTimeout(()=>dn=0,60));
 function tick(now){const dt=Math.min((now-last)/1000,.1);last=now;acc+=dt;
-tm.forEach(t=>{if(t.broken)return;if(t.dwell>0){t.dwell-=dt;if(t.dwell<=0){t.dwell=0;t.f=(t.f+1e-4)%1}return}const nf=t.f+dt*SIMX/(LOOP*60)/T[tr][0];let hit=-1,hd=2;S.forEach((s,i)=>{if(s.closed)return;const a=((s.f-t.f)%1+1)%1,b=nf-t.f;if(a>1e-5&&a<=b&&a<hd){hd=a;hit=i}});if(hit>=0){t.f=S[hit].f;t.dwell=DW;t.at=hit;t.seats=Math.max(0,Math.min(20,t.seats+Math.floor(Math.random()*13)-6))}else t.f=nf%1});
+tm.forEach(t=>{if(t.broken)return;if(t.dwell>0){t.dwell-=dt;if(t.dwell<=0){t.dwell=0;t.f=(t.f+1e-4)%1}return}const nf=t.f+dt*SIMX/(LOOP*60)/T[tr][0];let hit=-1,hd=2;S.forEach((s,i)=>{if(s.closed)return;const a=((s.f-t.f)%1+1)%1,b=nf-t.f;if(a>1e-5&&a<=b&&a<hd){hd=a;hit=i}});if(hit>=0){t.f=S[hit].f;t.dwell=DW+S[hit].extraWait;t.at=hit;t.seats=Math.max(0,Math.min(20,t.seats+Math.floor(Math.random()*13)-6))}else t.f=nf%1});
 drawTrams();drawTrams();if(acc>1){acc=0;tc++;if(tc%12==0)tr+=tr==0?1:tr==2?-1:(Math.random()<.5?-1:1);calc();if(!dn){sheet();list()}}requestAnimationFrame(tick)}
 function applyLanguage(){
 document.documentElement.lang=lang;
@@ -186,7 +256,8 @@ $("languageToggle").setAttribute("aria-label",lang==="en"?"Switch to Thai":"เ�
 $("roadLabel").textContent=t("roadLabel");$("directionLabel").textContent=t("directionLabel");
 if(lastMessage>=0)$("msg").textContent=translations[lang].messages[lastMessage];
 drawMap();sheet();list()
+renderAlerts();updateServiceStatus()
 }
 $("languageToggle").onclick=()=>{lang=lang==="en"?"th":"en";applyLanguage()};
-calc();applyLanguage();requestAnimationFrame(tick);
+calc();applyLanguage();setInterval(updateRandomAlert,15000);requestAnimationFrame(tick);
 </script></body></html>

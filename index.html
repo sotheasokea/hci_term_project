@@ -35,8 +35,9 @@ nav button b{display:block;font-size:20px;font-weight:400}nav button.on{color:va
 .al.bad{border-color:var(--bad)}.al b{display:block}.al .alt{display:none;margin-top:8px;padding:8px;background:var(--card);border-radius:8px;font-size:13px}
 .al.open .alt{display:block}
 .btn{border:0;background:var(--pri);color:#fff;border-radius:12px;font:inherit;padding:8px 14px;cursor:pointer}
-.recommendation{position:absolute;inset:0;z-index:10;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.48)}
-.recommendation[hidden]{display:none}.recommendation-card{width:100%;max-width:320px;padding:20px;background:var(--card);color:var(--tx);border:1px solid var(--br);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.phone{position:relative}
+.recommendation{position:absolute;top:12px;left:12px;right:12px;z-index:10;display:flex;justify-content:center;align-items:flex-start;pointer-events:none}
+.recommendation[hidden]{display:none}.recommendation-card{width:100%;max-width:320px;padding:20px;background:var(--card);color:var(--tx);border:1px solid var(--br);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.3);pointer-events:auto}
 .recommendation-card h2{margin:0 0 10px;font-size:18px}.recommendation-card p{margin:0 0 18px;line-height:1.5;color:var(--tx)}
 .recommendation-card .btn{display:block;margin-left:auto}
 .hurry{width:210px;height:210px;border-radius:50%;border:0;background:var(--pri);color:#fff;font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 10px 0 #a63a18;position:relative}
@@ -79,8 +80,8 @@ nav button b{display:block;font-size:20px;font-weight:400}nav button.on{color:va
 <div class="mut" data-i18n="justForFun" style="margin-top:12px">* Just for fun — it has no effect on the real tram.</div>
 </section>
 </main>
-<div class="recommendation" id="recommendation" hidden role="dialog" aria-modal="true" aria-labelledby="recommendationTitle">
-<div class="recommendation-card"><h2 id="recommendationTitle"></h2><p id="recommendationText"></p><button class="btn" id="recommendationClose" type="button">OK</button></div>
+<div class="recommendation" id="recommendation" hidden role="dialog" aria-modal="false" aria-labelledby="recommendationTitle">
+<div class="recommendation-card"><h2 id="recommendationTitle"></h2><p id="recommendationText"></p></div>
 </div>
 <nav>
 <button class="on" data-t="map"><b>🗺️</b><span data-i18n="navMap">Map</span></button>
@@ -117,7 +118,6 @@ recommendationWait:"The tram is expected in {0} min. We recommend waiting for it
 recommendationWalk:"The tram is expected in {0} min, Consider walking instead.",
 recommendationClosed:"This stop is closed. Walk to an open nearby stop to catch a tram.",
 recommendationNoService:"No trams are currently running. Consider walking or checking the service alerts.",
-recommendationClose:"Got it",
 hurryPrompt:"Waiting for the tram? Tap to cheer it on!",hurryButton:"🚋<br>Hurry up!",
 justForFun:"* Just for fun — it has no effect on the real tram.",
 navMap:"Map",navStops:"Stops",navAlerts:"Alerts",navHurry:"Hurry",
@@ -153,7 +153,6 @@ recommendationWait:"รถรางคาดว่าจะมาถึงใน
 recommendationWalk:"รถรางคาดว่าจะมาถึงใน {0} นาที แนะนำให้เดินแทน",
 recommendationClosed:"ป้ายนี้ปิดให้บริการ กรุณาเดินไปยังป้ายใกล้เคียงที่เปิดให้บริการ",
 recommendationNoService:"ขณะนี้ไม่มีรถรางให้บริการ แนะนำให้เดินหรือตรวจสอบการแจ้งเตือน",
-recommendationClose:"รับทราบ",
 hurryPrompt:"กำลังรอรถรางอยู่หรือเปล่า? แตะเพื่อส่งกำลังใจ!",hurryButton:"🚋<br>มาเร็ว ๆ นะ!",
 justForFun:"* เพื่อความสนุกเท่านั้น ไม่มีผลต่อเวลารถรางจริง",
 navMap:"แผนที่",navStops:"ป้าย",navAlerts:"แจ้งเตือน",navHurry:"เรียกรถ",
@@ -168,7 +167,7 @@ messages:["ได้ยินแล้ว! 🚋💨","คนขับ: ...ก็
 let lang="en";
 function t(key,...values){return translations[lang][key].replace(/\{(\d+)\}/g,(_,i)=>values[Number(i)])}
 const S=[
-{n:"South Gate",th:"ประตูทิศใต้",x:170,y:568,s:"r",e:4,seat:15},{n:"Satid 5",th:"สาธิต 5",x:394,y:480,s:"l",e:7,seat:9},{n:"Education B1",th:"อาคารศึกษา B1",x:397,y:417,s:"t",e:9,seat:4},
+{n:"South Gate",th:"ประตูทิศใต้",x:170,y:568,s:"r",e:4,seat:15},{n:"Satid",th:"สาธิต",x:394,y:480,s:"l",e:7,seat:9},{n:"Education B1",th:"อาคารศึกษา B1",x:397,y:417,s:"t",e:9,seat:4},
 {n:"Administrator",th:"อาคารบริหาร",x:325,y:411,s:"t",e:12,seat:12},{n:"Art Faculty",th:"คณะมัณฑนศิลป์",x:170,y:470,s:"l",e:6,seat:8},{n:"Union Canteen",th:"โรงอาหารยูเนี่ยน",x:170,y:367,s:"r",e:3,seat:17},
 {n:"Faculty of Science",th:"คณะวิทยาศาสตร์",x:170,y:296,s:"r",e:5,seat:7},{n:"Petcharat Canteen",th:"โรงอาหารเพชรรัตน์",x:170,y:183,s:"r",e:8,seat:2},{n:"Indee",th:"อินดี",x:178,y:155,s:"r",e:10,seat:11},{n:"Painting Faculty",th:"คณะจิตรกรรมฯ",x:22,y:102,s:"r",e:14,seat:6}];
 const stopName=s=>lang==="th"?s.th:s.n;
@@ -187,7 +186,7 @@ ${s.closed?`<div style="margin:10px 0" class="mut">${t("closedHelp")} <b>${stopN
 <div class="row"><span class="mut">${t("traffic")}</span><span class="chip" style="background:${["var(--ok)","var(--warn)","var(--bad)"][tr]};color:#fff;border:0;cursor:default">● ${translations[lang].trafficLevels[tr]}</span></div>
 <div class="mut" style="margin-top:6px">${t("forecast")}</div>`}
 function list(){$("list").innerHTML=S.map((s,i)=>`<div class="item ${i==sel?"sel":""}" onclick="pick(${i});go('map')"><span class="nm">${s.closed?"⛔ ":""}${stopName(s)}</span><b>${s.closed?t("closedList"):(s.e<.5?(lang==="th"?"ขณะนี้":"Now"):t("minArrival",eta(s)))}</b>${s.closed?"":seatBar(s.seat)}</div>`).join("")}
-let recommendationTimer=null,recommendationStop=null;
+let recommendationTimer=null,recommendationHideTimer=null,recommendationStop=null;
 function showRecommendation(stopIndex){
 recommendationStop=stopIndex;
 const stop=S[stopIndex],text=$("recommendationText");
@@ -198,18 +197,17 @@ const minutes=Math.max(0,Math.round(stop.e));
 text.textContent=stop.e<=15?t("recommendationWait",minutes):t("recommendationWalk",minutes)
 }
 $("recommendationTitle").textContent=t("recommendationTitle");
-$("recommendationClose").textContent=t("recommendationClose");
 $("recommendation").hidden=false;
-$("recommendationClose").focus()
+clearTimeout(recommendationHideTimer);
+recommendationHideTimer=setTimeout(closeRecommendation,3000)
 }
 function scheduleRecommendation(stopIndex){
 clearTimeout(recommendationTimer);
+clearTimeout(recommendationHideTimer);
 $("recommendation").hidden=true;
 recommendationTimer=setTimeout(()=>showRecommendation(stopIndex),2000)
 }
-function closeRecommendation(){$("recommendation").hidden=true}
-$("recommendationClose").onclick=closeRecommendation;
-$("recommendation").onclick=e=>{if(e.target===$("recommendation"))closeRecommendation()};
+function closeRecommendation(){clearTimeout(recommendationHideTimer);$("recommendation").hidden=true}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("recommendation").hidden)closeRecommendation()});
 function pick(i){sel=i;calc();drawMap();sheet();list();scheduleRecommendation(i)}
 function setT(i){tr=i;calc();sheet();list()}
@@ -230,10 +228,21 @@ const tm=Array.from({length:5},(_,i)=>({f:i/5,seats:[14,6,10,12,8][i],broken:fal
 tm[1].broken=true;tm[1].f=S[2].f-.01;
 S.forEach(s=>s.extraWait=0);
 let activeAlerts=[{type:"tramBroken",tramId:2,stopIndex:2}],alertNotice=null;
+let newAlertTimer=null,newAlertVisible=false;
+function updateAlertCount(){
+const badge=$("alertCount");
+badge.textContent=newAlertVisible?"NEW":activeAlerts.length;
+badge.hidden=activeAlerts.length===0&&!newAlertVisible
+}
+function flashNewAlert(){
+clearTimeout(newAlertTimer);
+newAlertVisible=true;
+updateAlertCount();
+newAlertTimer=setTimeout(()=>{newAlertVisible=false;updateAlertCount()},2000)
+}
 function renderAlerts(){
 const alerts=alertNotice?[...activeAlerts,alertNotice]:activeAlerts;
-$("alertCount").textContent=activeAlerts.length;
-$("alertCount").hidden=activeAlerts.length===0;
+updateAlertCount();
 if(!alerts.length){$("alertsList").innerHTML=`<div class="al" style="border-color:var(--ok)"><b>${t("normalService")}</b><span class="mut">${t("updatedNow")}</span></div>`;return}
 $("alertsList").innerHTML=alerts.map(a=>{
 const place=stopName(S[a.stopIndex??2]),args=a.type.startsWith("tram")?[a.tramId,place]:[place],severity=["tramBroken","stopClosed"].includes(a.type)?" bad":"";
@@ -283,7 +292,7 @@ activeAlerts=activeAlerts.filter(a=>a.type!==type);
 updateStopWait(stopIndex);
 alertNotice={type:choice==="trafficClear"?"trafficCleared":"delayCleared",stopIndex};
 }
-calc();drawMap();sheet();list();renderAlerts();updateServiceStatus()
+flashNewAlert();calc();drawMap();sheet();list();renderAlerts();updateServiceStatus()
 }
 function etaT(t,si,real){if(t.dwell>0&&t.at==si)return 0;const sp=real?1/T[tr][0]:1,d=((S[si].f-t.f)%1+1)%1;let wait=0;S.forEach((s,j)=>{const dj=((s.f-t.f)%1+1)%1;if(j!=si&&!s.closed&&dj>0&&dj<d)wait+=(DW+s.extraWait)*SIMX/60});return d*LOOP/sp+wait+(t.dwell>0?t.dwell*SIMX/60:0)}
 function calc(){S.forEach((s,i)=>{if(s.closed)return;let b=null;tm.forEach(t=>{if(t.broken)return;const m=etaT(t,i,1);if(!b||m<b.m)b={m,t}});if(b){s.e=b.m;s.norm=etaT(b.t,i,0);s.seat=b.t.seats}})}
